@@ -13,11 +13,16 @@ const CreateProjectCard = () => {
   const [fundingGoal, setFundingGoal] = useState('');
 
   const storeData = async (e) => {
-    e.preventDefault(); // Prevent the form from submitting traditionally
+    e.preventDefault();
     const projectData = { projectName, description, imgLink, fundingGoal };
-    const projectRef = gun.get('projects').set(projectData); // Store data in Gun
+    const projectRef = gun.get('projects').set(projectData);
+    
     console.log("Data stored with Gun ref:", projectRef);
+  
+    // Log the data immediately after storing
+    
   };
+  localStorage.clear()
 
   const solidityCode = `
     // SPDX-License-Identifier: MIT
@@ -48,7 +53,7 @@ const CreateProjectCard = () => {
   return (
     <div className='CreateProjectCard-div'>
         <div className='Form-div'>
-          <form className='Form-form' onSubmit={(e) => storeData}>
+          <form className='Form-form' onSubmit={(e) => storeData(e)}>
             <label>
               Project Name:
               <input type="text" value={projectName} onChange={e => setProjectName(e.target.value)} />
