@@ -45,7 +45,7 @@ const ScrollSection = (props) => {
 
       >
         {items.map(item => (
-          <Card key={item.id} project_name='PROJECT_NAME' project_desc='Ensure that the padding, border, and any other styling details of both .Card-div and .CardContainer-div are tailored to your specific design requirements. Adjusting these values can help achieve the desired layout and visual impact without compromising the design integrity on different screen sizes or orientations.' project_stats='asd' project_img={img1}/>
+          <Card key={item.id} project_name='PROJECT_NAME' project_desc='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ullamcorper sit amet risus nullam eget felis eget nunc. Vulputate eu scelerisque felis imperdiet proin. Velit scelerisque in dictum non. Ac turpis egestas integer eget aliquet nibh praesent tristique magna. Bibendum arcu vitae elementum curabitur vitae nunc sed velit dignissim. Scelerisque mauris pellentesque pulvinar pellentesque habitant. Varius vel pharetra vel turpis nunc eget lorem. Enim blandit volutpat maecenas volutpat blandit aliquam etiam erat velit. Est lorem ipsum dolor sit amet. Consequat id porta nibh venenatis cras sed. Ut etiam sit amet nisl purus. Turpis massa sed elementum tempus egestas sed sed risus pretium. Massa ultricies mi quis hendrerit dolor. Aliquet sagittis id consectetur purus ut faucibus. Urna et pharetra pharetra massa massa ultricies mi. Tincidunt lobortis feugiat vivamus at augue eget arcu dictum. In ante metus dictum at tempor commodo ullamcorper a lacus.' project_stats='asd' project_img={img1}/>
           // Pass other properties to Card as needed
         ))}
         {isLoading && <p>Loading more items...</p>}
