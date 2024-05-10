@@ -37,14 +37,15 @@ label {
 input,
 textarea {
   color: white;
-  width: 100%; // Ensures inputs take full width of their container
-  padding: 8px; // Adds padding for better text visibility
+  box-sizing: border-box; // Ensures inputs take full width of their container
+  width: 100%;
+  line-height: 16pt;// Adds padding for better text visibility
   border: 1px solid #ccc; // Gives a border to the input fields
   background-color: #2f2f2f;
   border-radius: 5px;
 }
 
-button {
+.SubmitButton-button {
   padding: 10px 20px; // Size adjustments for better interaction
   background-color: #007bff; // Example button color
   color: white;

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import Gun from 'gun';
+import Gun from "gun";
 import "../scss/CreateProjectCard.scss";
 
-const gun = Gun(['http://localhost:8765/gun']); // Add your Gun peers here
+const gun = Gun(["http://localhost:8765/gun"]); // Add your Gun peers here
 
-const CreateProjectCard = () => {
+const CreateProjectCard = ({ onClose }) => {
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [imgLink, setImgLink] = useState("");
@@ -15,10 +15,9 @@ const CreateProjectCard = () => {
   const storeData = async (e) => {
     e.preventDefault(); // Prevent the form from submitting traditionally
     const projectData = { projectName, description, imgLink, fundingGoal };
-    const projectRef = gun.get('projects').set(projectData); // Store data in Gun
+    const projectRef = gun.get("projects").set(projectData); // Store data in Gun
     console.log("Data stored with Gun ref:", projectRef);
   };
-
   const solidityCode = `
     // SPDX-License-Identifier: MIT
     pragma solidity ^0.8.0;
@@ -57,13 +56,11 @@ const CreateProjectCard = () => {
         }
     }`;
 
-
   return (
     <div className="CreateProjectCard-div">
       <div className="Wrapper-div">
         <div className="Form-div">
           <h1>Create a new project</h1>
-          <p>Deploy a smart contract, where users can donate ethereum to fund your project. When the funding goal is reached, the funds will be sent out to your wallet in fractions (which you can map to your project roadmap e.g.).<br />During the pay out period, the investors can vote on how your project is developing. If the majority of investors (51%) decide, that your project is not going according to your roadmap, they can claim back their locked funds.</p>
           <form className="Form-form" onSubmit={(e) => storeData}>
             <div className="FormField">
               <label>Project Name:</label>
@@ -96,7 +93,7 @@ const CreateProjectCard = () => {
                 onChange={(e) => setFundingGoal(e.target.value)}
               />
             </div>
-            <button type="submit">Create Project</button>
+            <button className="SubmitButton-button" type="submit">Create Project</button>
           </form>
         </div>
         <div className="Code-div">

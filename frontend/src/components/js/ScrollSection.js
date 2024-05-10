@@ -60,12 +60,7 @@ const ScrollSection = (props) => {
 
   return (
     <section className="ScrollSection-section">
-      <div className='Canvas-div'>
-
-        <ThreeScene className='Canvas-div'>
-        </ThreeScene>
-      </div>
-        
+      
       <div 
         className="ScrollSectionContainer-div" 
         onScroll={handleScroll} 
