@@ -1,0 +1,31 @@
+.CreateProjectCard-div {
+    position: fixed; // Use fixed to keep it centered regardless of scrolling
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%); // Center the div precisely
+    display: flex; // Ensures children are laid out inline
+    flex-direction: row; // Align children side by side
+    align-items: center; // Align items vertically in the center
+    justify-content: center; // Align items horizontally in the center
+    width: 80%; // Adjust as necessary to fit content
+    border: 1px solid red;
+    background-color: white;
+    padding: 20px;
+    z-index: 2; // Make sure it sits above other content
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); // Optional: adds shadow for better visibility
+}
+
+.Form-div {
+    margin-right: 20px; // Gives some space between the form and code display
+}
+
+.Code-div {
+    flex: 1; // Allows it to take up the remaining space
+    max-width: 50%; // Limits width to half of the parent div
+    overflow: auto; // Adds scroll to the div if content overflows
+}
+
+.Form-form {
+    display: flex; // Ensures children are laid out inline
+    flex-direction: column; // Align children vertically
+}
