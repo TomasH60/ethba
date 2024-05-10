@@ -44,7 +44,6 @@ const ScrollSection = (props) => {
       <div className='Canvas-div'>
 
         <ThreeScene className='Canvas-div'>
-              
         </ThreeScene>
       </div>
         
