@@ -3,6 +3,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import Gun from 'gun';
 import "../scss/CreateProjectCard.scss";
+import PlotFractions from "./PlotFractions";
 
 const gun = Gun(['http://localhost:8765/gun']); // Add your Gun peers here
 
@@ -11,65 +12,93 @@ const CreateProjectCard = () => {
   const [description, setDescription] = useState("");
   const [imgLink, setImgLink] = useState("");
   const [fundingGoal, setFundingGoal] = useState("");
+  const [fractionNums, setFractionNums] = useState();
+  const [fractions, setFractions] = useState([]);
 
   const storeData = async (e) => {
     e.preventDefault();
     const projectData = { projectName, description, imgLink, fundingGoal };
     const projectRef = gun.get('projects').set(projectData);
-    
     console.log("Data stored with Gun ref:", projectRef);
-  
-    // Log the data immediately after storing
-    
   };
-  localStorage.clear()
 
-  const solidityCode = `
-    // SPDX-License-Identifier: MIT
-    pragma solidity ^0.8.0;
+  const handleFractionChange = (index, value) => {
+    const newFractions = [...fractions];
+    newFractions[index] = Number(value);
+    setFractions(newFractions);
+  };
 
-    contract ProjectContract {
-        address public owner;
-        uint public fundingGoal;
-        uint public totalFundsReceived;
+  const FractionValueDisplay = () => {
+    const totalPercentage = fractions.reduce((acc, curr) => acc + curr, 0);
+    return fractions.map((fraction, index) => (
+        <div key={index} className="FractionValue">
+          {((fraction) / 100 * fundingGoal).toFixed(2)} ETH 
+        
+        </div>
+    ));
+  };
+  
+  const calculatePercentageData = () => {
+    const total = fractions.reduce((acc, val) => acc + val, 0);
+    let cumulativeTotal = 0;
+  
+    const data = [{ fractionNumber: 0, percentage: 0 }];  // Start with 0%
+  
+    fractions.forEach((fraction, index) => {
+      cumulativeTotal += fraction;
+      data.push({
+        fractionNumber: index + 1,
+        percentage: (cumulativeTotal / total) * 100
+      });
+    });
+  
+    return data;
+  };
 
-        // Events to log actions
-    event FundReceived(address sender, uint amount);
-    event FundsWithdrawn(address recipient, uint amount);
+  
+  const plotData = calculatePercentageData();  
+      
 
-    // Modifier to restrict actions to only the owner
-    modifier onlyOwner() {
-        require(msg.sender == owner, "You are not the owner.");
-        _;
+  const renderFractionBoxes = () => {
+    return (
+      <>
+        <div className="FractionBox">
+          {Array.from({ length: parseInt(fractionNums, 10) }, (_, index) => (
+            <div key={index} className="InputWithUnit">
+              <input
+                className="FractionInput"
+                type="number"
+                value={fractions[index] || ''}
+                onChange={(e) => handleFractionChange(index, e.target.value)}
+                placeholder={`Fraction ${index + 1}`}
+              />
+              <span className="Unit">%</span>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  };
+
+
+
+  const totalPercentage = fractions.reduce((acc, curr) => acc + curr, 0);
+
+  const isTotalValid = totalPercentage <= 100;
+
+  const renderValidationMessage = () => {
+    if (!isTotalValid) {
+      return <p style={{ color: 'red' }}>The total percentage cannot exceed 100%.</p>;
     }
-
-    // Constructor to set the owner and funding goal during deployment
-    constructor(uint _fundingGoal) {
-            owner = msg.sender;
-            fundingGoal = _fundingGoal;
-        }
-
-        // Function to receive funds
-    receive() external payable {
-            totalFundsReceived += msg.value;
-            emit FundReceived(msg.sender, msg.value);
-    }
-
-        function withdrawFunds() public {
-            require(totalFundsReceived >= fundingGoal, "Goal not reached");
-            (bool sent, ) = owner.call{value: address(this).balance}("");
-            require(sent, "Failed to send Ether");
-        }
-    }`;
-
+    return null;
+  };
 
   return (
     <div className="CreateProjectCard-div">
       <div className="Wrapper-div">
         <div className="Form-div">
           <h1>Create a new project</h1>
-          <p>Deploy a smart contract, where users can donate ethereum to fund your project. When the funding goal is reached, the funds will be sent out to your wallet in fractions (which you can map to your project roadmap e.g.).<br />During the pay out period, the investors can vote on how your project is developing. If the majority of investors (51%) decide, that your project is not going according to your roadmap, they can claim back their locked funds.</p>
-          <form className="Form-form" onSubmit={(e) => storeData}>
+          <form className="Form-form" onSubmit={storeData}>
             <div className="FormField">
               <label>Project Name:</label>
               <input
@@ -95,18 +124,50 @@ const CreateProjectCard = () => {
             </div>
             <div className="FormField">
               <label>Funding Goal:</label>
+              <div className="InputWithUnit">
+                <input
+                  type="number"
+                  value={fundingGoal}
+                  onChange={(e) => setFundingGoal(e.target.value)}
+                  placeholder="Enter funding goal"
+                />
+                <span className="Unit">ETH</span>
+              </div>
+            </div>
+            <div className="FormField">
+              <label>Number of fractions:</label>
               <input
                 type="number"
-                value={fundingGoal}
-                onChange={(e) => setFundingGoal(e.target.value)}
+                value={fractionNums}
+                onChange={(e) => {
+                  const num = Math.min(Number(e.target.value), 10); // Limit fractions to a maximum of 10
+                  setFractionNums(num);
+                  setFractions(new Array(num).fill(0)); // Reset fractions array when number changes
+                }}
+                max="10"
+                min="0"
               />
             </div>
-            <button type="submit">Create Project</button>
+            <div className="FractionsContainer">
+              
+              {fractionNums > 0 && renderFractionBoxes()}
+              
+              <div className="FractionValueContainer">
+              {fractionNums > 0 && fundingGoal > 0 &&<FractionValueDisplay />}</div>
+            </div>
+
+            {fractionNums > 0 && renderValidationMessage()}
+            
+            <div className="PlotBox"> 
+              <PlotFractions data={plotData} className/>
+            </div>
+            <button type="submit" disabled={!isTotalValid}>Create Project</button>
           </form>
+
         </div>
         <div className="Code-div">
           <SyntaxHighlighter language="solidity" style={materialDark}>
-            {solidityCode}
+            {/* Solidity code here */}
           </SyntaxHighlighter>
         </div>
       </div>
