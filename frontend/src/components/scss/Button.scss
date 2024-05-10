@@ -1,0 +1,13 @@
+.Button-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}

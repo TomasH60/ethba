@@ -1,0 +1,19 @@
+.ScrollSection-section {
+    
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ScrollSectionContainer-div {
+    width: 80%;
+    height: calc(100% - 100px); /* Subtract the offset from the total height */
+    margin-top: 100px; /* This adds the 100px offset at the top */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: 'auto';
+
+}
