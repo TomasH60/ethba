@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import Gun from 'gun';
 import Card from './Card';
 import "../scss/ScrollSection.scss";
-import img1 from '../../img1.png'
+import img1 from '../../img1.png';
+import ThreeScene from './ThreeScene';
+
+const gun = Gun(['http://localhost:8765/gun']); // Adjust the Gun peer(s) as necessary
 
 const ScrollSection = (props) => {
   const [items, setItems] = useState([]);
@@ -9,9 +13,22 @@ const ScrollSection = (props) => {
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    loadMoreItems();
+    loadInitialItems();
   }, []);
 
+  const loadInitialItems = () => {
+    setIsLoading(true);
+    gun.get('projects').map().once((project, id) => {
+      if (project) {
+        setItems(prevItems => [...prevItems, { ...project, id }]);
+      }
+    });
+    setIsLoading(false);
+  };
+
+  
+
+  
   const loadMoreItems = () => {
     if (isLoading || !hasMore) return;
 
@@ -30,15 +47,25 @@ const ScrollSection = (props) => {
 
   const handleScroll = (event) => {
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
-
+  
+    
     if (scrollHeight - scrollTop <= clientHeight + 10) {
       loadMoreItems();
     }
+  
   };
+  
+ 
+
 
   return (
     <section className="ScrollSection-section">
-      <div className='testSprite'></div>
+      <div className='Canvas-div'>
+
+        <ThreeScene className='Canvas-div'>
+        </ThreeScene>
+      </div>
+        
       <div 
         className="ScrollSectionContainer-div" 
         onScroll={handleScroll} 

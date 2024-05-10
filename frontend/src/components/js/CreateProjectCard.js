@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import Gun from 'gun';
 import "../scss/CreateProjectCard.scss";
+
+const gun = Gun(['http://localhost:8765/gun']); // Add your Gun peers here
 
 const CreateProjectCard = () => {
   const [projectName, setProjectName] = useState("");
@@ -9,12 +12,23 @@ const CreateProjectCard = () => {
   const [imgLink, setImgLink] = useState("");
   const [fundingGoal, setFundingGoal] = useState("");
 
-  const solidityCode = `contract ProjectContract {
-    address public owner;
-    uint public fundingGoal;
-    uint public totalFundsReceived;
+  const storeData = async (e) => {
+    e.preventDefault(); // Prevent the form from submitting traditionally
+    const projectData = { projectName, description, imgLink, fundingGoal };
+    const projectRef = gun.get('projects').set(projectData); // Store data in Gun
+    console.log("Data stored with Gun ref:", projectRef);
+  };
 
-    // Events to log actions
+  const solidityCode = `
+    // SPDX-License-Identifier: MIT
+    pragma solidity ^0.8.0;
+
+    contract ProjectContract {
+        address public owner;
+        uint public fundingGoal;
+        uint public totalFundsReceived;
+
+        // Events to log actions
     event FundReceived(address sender, uint amount);
     event FundsWithdrawn(address recipient, uint amount);
 
@@ -26,43 +40,31 @@ const CreateProjectCard = () => {
 
     // Constructor to set the owner and funding goal during deployment
     constructor(uint _fundingGoal) {
-        owner = msg.sender;
-        fundingGoal = _fundingGoal;
-    }
+            owner = msg.sender;
+            fundingGoal = _fundingGoal;
+        }
 
-    // Function to receive funds
+        // Function to receive funds
     receive() external payable {
-        totalFundsReceived += msg.value;
-        emit FundReceived(msg.sender, msg.value);
+            totalFundsReceived += msg.value;
+            emit FundReceived(msg.sender, msg.value);
     }
 
-    // Function to check if the funding goal is met
-    function isGoalMet() public view returns(bool) {
-        return totalFundsReceived >= fundingGoal;
-    }
+        function withdrawFunds() public {
+            require(totalFundsReceived >= fundingGoal, "Goal not reached");
+            (bool sent, ) = owner.call{value: address(this).balance}("");
+            require(sent, "Failed to send Ether");
+        }
+    }`;
 
-    // Function for the owner to withdraw funds after the goal is met
-    function withdrawFunds() public onlyOwner {
-        require(isGoalMet(), "Funding goal has not been met.");
-        uint amount = address(this).balance;
-        (bool success, ) = owner.call{value: amount}("");
-        require(success, "Failed to send Ether");
-        emit FundsWithdrawn(owner, amount);
-    }
-
-    // Function to get the current balance of the contract
-    function getBalance() public view returns (uint) {
-        return address(this).balance;
-    }
-}
-  `;
 
   return (
     <div className="CreateProjectCard-div">
       <div className="Wrapper-div">
         <div className="Form-div">
           <h1>Create a new project</h1>
-          <form className="Form-form">
+          <p>Deploy a smart contract, where users can donate ethereum to fund your project. When the funding goal is reached, the funds will be sent out to your wallet in fractions (which you can map to your project roadmap e.g.).<br />During the pay out period, the investors can vote on how your project is developing. If the majority of investors (51%) decide, that your project is not going according to your roadmap, they can claim back their locked funds.</p>
+          <form className="Form-form" onSubmit={(e) => storeData}>
             <div className="FormField">
               <label>Project Name:</label>
               <input

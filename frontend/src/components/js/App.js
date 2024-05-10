@@ -4,6 +4,7 @@ import Card from "./Card";
 import ScrollSection from "./ScrollSection";
 import CreateProjectCard from "./CreateProjectCard";
 import '../scss/App.scss'
+import ThreeScene from './ThreeScene'; // Make sure the path is correct
 
 const App = () => {
   const [showCreateProject, setShowCreateProject] = useState(false);
