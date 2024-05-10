@@ -31,14 +31,6 @@ const ScrollSection = (props) => {
     setIsLoading(false);
   };
 
-  
-
-  
-  
-  
- 
-
-
   return (
     <section className="ScrollSection-section">
       
