@@ -25,6 +25,102 @@
   width: 45%;
 }
 
+.FractionsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+  gap: 2%; 
+}
+.FractionValueContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  align-items: center;
+  width: 100%;
+  gap : 3%;
+}
+.FractionBox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3%;
+  width: 100%;/* Set relative positioning for pseudo-elements */
+}
+
+.FractionInput {
+  flex: 1; /* Allows the input to grow and fill the space */
+  border: 1px solid #ccc;
+  background-color: #2f2f2f;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  inset: "%";
+}
+
+.InputWithUnit {
+  position: relative; /* Needed for absolute positioning of children */
+  display: flex;
+  align-items: center; /* Keeps the input and unit vertically aligned */
+  background-color: #2f2f2f; /* Match input background */
+  border-radius: 5px; /* Match your input field's border-radius */
+}
+
+.InputWithUnit input {
+  flex: 1; /* Allows input to take up all space except for the unit */
+  color: white;
+  background-color: transparent; /* Matches the container background */
+  padding-right: 50px; /* Provides space for the unit */
+}
+
+.PlotBox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3%;
+  width: 100%;
+}
+.Plot {
+  width: 50%;
+  height: 20%;
+
+}
+
+.InputWithUnit .Unit {
+  position: absolute;
+  right: 10px; /* Adjusts spacing to the right of the container */
+  color: white;
+}
+
+
+.FractionInput::after {
+  content: '%'; /* Add the % sign */
+  position: absolute;
+  right: 10px; /* Adjust distance to the right of the input field */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%);
+  color: white;
+  pointer-events: none; /* Prevent the pseudo-element from being clickable */
+}
+
+
+
+
+
+.FractionValue {
+  color: white; /* Adjust based on your layout preferences */
+  text-align: center;
+  justify-content: center;
+  flex : 1;
+  
+}
+
+
+
+
 .FormField {
   margin-bottom: 20px; // Adds space between each form field
 }
@@ -37,9 +133,11 @@ label {
 input,
 textarea {
   color: white;
-  box-sizing: border-box; // Ensures inputs take full width of their container
-  width: 100%;
-  line-height: 16pt;// Adds padding for better text visibility
+  width: 100%; // Ensures inputs take full width of their container
+  
+  padding-top: 8px;
+  padding-bottom: 8px;
+  
   border: 1px solid #ccc; // Gives a border to the input fields
   background-color: #2f2f2f;
   border-radius: 5px;
