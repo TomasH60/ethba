@@ -12,8 +12,15 @@
     margin-top: 100px; /* This adds the 100px offset at the top */
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    overflow-y: 'auto';
+    overflow-y: auto;
+    gap: 20px;
 
+}
+
+.testSprite {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: red;
 }

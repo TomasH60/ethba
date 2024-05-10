@@ -1,0 +1,44 @@
+.Card-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  border: 2px solid #ffffff65; /* Light white border for subtle effect */
+  width: 80%;
+
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent white background */
+  backdrop-filter: blur(10px); /* Blur effect for the glassmorphic style */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  color: white;
+  padding: 20px;
+  height: 50vh;
+}
+
+.Card-div h1,
+p {
+  color: white;
+  margin: 0;
+}
+
+.CardContainer-div {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  height: 100%;
+  max-width: 50%;
+
+}
+.project_img-img {
+  flex-grow: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+.project_desc-p {
+  flex-grow: 1;
+  justify-content: center;
+}

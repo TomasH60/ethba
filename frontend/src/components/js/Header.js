@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <div className="Header-div">
       <div className="HeaderContainer-div">
-        <h1>EthFund</h1>
+        <h1>EtheralFund</h1>
         <div className="HeaderButtonContainer-div">
           <Button text="Home" />
           <Button text="Add project" />
