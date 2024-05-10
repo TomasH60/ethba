@@ -1,0 +1,30 @@
+.HomeCard-div {
+  position: fixed; // Use fixed to keep it centered regardless of scrolling
+  top: 55%;
+  left: 50%;
+  height: 80%;
+  transform: translate(-50%, -50%); // Center the div precisely
+  display: flex; // Ensures children are laid out inline
+  flex-direction: column; // Align children side by side
+  align-items: center; // Align items vertically in the center// Align items horizontally in the center
+  width: 60%;
+  border: 2px solid #ffffff65;
+  background: rgba(41, 40, 40, 0.89); /* Semi-transparent white background */
+  backdrop-filter: blur(10px); /* Blur effect for the glassmorphic style */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  border-radius: 15px;
+  padding: 20px;
+  color: white;
+  justify-content: center;
+  z-index: 2; // Make sure it sits above other content// Optional: adds shadow for better visibility
+}
+
+p {
+    font-size: 1.2rem;
+    font-weight: 400;
+    max-width: 70%;
+}
+h1 {
+    font-size: 3rem;
+    text-align: center;
+}

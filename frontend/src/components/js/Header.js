@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./../scss/Header.scss";
 import Button from "./Button";
 
-const Header = ({ onAddProject }) => {
+const Header = ({ onAddProject, onShowHome, onShowProjects }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [connectedAddress, setConnectedAddress] = useState("");
 
@@ -41,7 +41,8 @@ const Header = ({ onAddProject }) => {
       <div className="HeaderContainer-div">
         <h1>EtheralFund</h1>
         <div className="HeaderButtonContainer-div">
-          <Button text="Home" />
+          <Button text="Home" onclick={onShowHome} />
+          <Button text="Projects" onclick={onShowProjects} />
           <Button text="Add project" onclick={onAddProject} />
           {isConnected ? (
             <Button text={`Wallet connected: ${connectedAddress.slice(0, 5)}...`} />

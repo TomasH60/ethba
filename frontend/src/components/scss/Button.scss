@@ -6,8 +6,12 @@
     background-color: #f8f9fa;
     color: black;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-   
+    font-weight: 500;
     border-radius: 5px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s; /* Transition applies to all properties including transform */
+}
+
+.Button-div:hover {
+    transform: scale(1.05); /* Scales up the button by 5% on hover */
 }

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import Gun from 'gun';
+import Gun from "gun";
 import "../scss/CreateProjectCard.scss";
 import PlotFractions from "./PlotFractions";
 
-const gun = Gun(['http://localhost:8765/gun']); // Add your Gun peers here
+const gun = Gun(["http://localhost:8765/gun"]); // Add your Gun peers here
 
-const CreateProjectCard = () => {
+const CreateProjectCard = ({ onClose }) => {
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [imgLink, setImgLink] = useState("");
@@ -21,7 +21,6 @@ const CreateProjectCard = () => {
     const projectRef = gun.get('projects').set(projectData);
     console.log("Data stored with Gun ref:", projectRef);
   };
-
   const handleFractionChange = (index, value) => {
     const newFractions = [...fractions];
     newFractions[index] = Number(value);
@@ -92,7 +91,6 @@ const CreateProjectCard = () => {
     }
     return null;
   };
-
   return (
     <div className="CreateProjectCard-div">
       <div className="Wrapper-div">
