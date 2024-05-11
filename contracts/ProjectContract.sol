@@ -8,29 +8,35 @@ contract ProjectContract {
     address[] public investors;
     uint[] public payoutFractions;
     uint public lastPayoutTime;
-    uint public payoutInterval; // Set the payout interval to one month
-    uint public fractionIndex = 0; // to track which fraction to pay next
+    uint public fractionIndex = 0;
+    uint public voteYes;
+    uint public voteNo; 
+    bool public isApproved;
+    uint public remainingFunds;
+    mapping(address => uint) public amountInvested;
 
-    // Events to log actions
     event FundReceived(address sender, uint amount);
     event FundsWithdrawn(address recipient, uint amount, uint fraction);
+    event FundReturned(address recipient, uint amount);
+    event FundAdjusted(address investor, uint oldInvestment, uint newInvestment);
 
-    // Modifier to restrict actions to only the owner
     modifier onlyOwner() {
         require(msg.sender == owner, "You are not the owner.");
         _;
     }
 
-    constructor(uint _fundingGoal, uint[] memory _payoutFractions, uint _payoutInterval) {
+    constructor(uint _fundingGoal, uint[] memory _payoutFractions) {
         owner = msg.sender;
         fundingGoal = _fundingGoal;
         payoutFractions = _payoutFractions;
         lastPayoutTime = block.timestamp;
-        payoutInterval = _payoutInterval; // Initialize the last payout time
+        remainingFunds = _fundingGoal;
     }
 
     receive() external payable {
         totalFundsReceived += msg.value;
+        investors.push(msg.sender);
+        amountInvested[msg.sender] += msg.value;
         emit FundReceived(msg.sender, msg.value);
     }
 
@@ -38,28 +44,70 @@ contract ProjectContract {
         return totalFundsReceived >= fundingGoal;
     }
 
-
-
-    function isTimeForPayout() public view returns(bool) {
-        return block.timestamp >= lastPayoutTime + payoutInterval && fractionIndex < payoutFractions.length;
+    function voteForYes() public {
+        require(amountInvested[msg.sender] > fundingGoal / 100000, "Insufficient stake to vote.");
+        uint votingPower = calculateVotingPower(msg.sender);
+        voteYes += votingPower;
+        if (voteYes * 1e18 > remainingFunds * 1e18 / 100 * 51) {
+            isApproved = true;
+        }
     }
 
-    // Now private and only called internally
+    function voteForNo() public {
+        require(amountInvested[msg.sender] > fundingGoal / 100000, "Insufficient stake to vote.");
+        uint votingPower = calculateVotingPower(msg.sender);
+        voteNo += votingPower;
+        if (voteNo * 1e18 > remainingFunds * 1e18 / 100 * 51) {
+            returnFundsToInvestors();
+        }
+    }
+
+    function calculateVotingPower(address voter) internal view returns (uint) {
+        uint votingPower = amountInvested[voter];
+        uint maxVotingPower = fundingGoal / 10;
+        if (votingPower > maxVotingPower) {
+            votingPower = maxVotingPower;
+        }
+        return votingPower;
+    }
+
+    function returnFundsToInvestors() internal {
+        for (uint i = 0; i < investors.length; i++) {
+            address investor = investors[i];
+            uint amount = amountInvested[investor];
+            (bool success, ) = investor.call{value: amount}("");
+            require(success, "Failed to return funds");
+            emit FundReturned(investor, amount);
+            amountInvested[investor] = 0; 
+        }
+        totalFundsReceived = 0; 
+    }
+
     function withdrawFunds() public onlyOwner() {
-        require(isGoalMet() && isTimeForPayout(), "cant withdraw");
+        require(isGoalMet() && isApproved, "Cannot withdraw");
         uint amount = address(this).balance * payoutFractions[fractionIndex] / 100;
+
+        for (uint i = 0; i < investors.length; i++) {
+            address investor = investors[i];
+            uint investorShare = amountInvested[investor] * amount / totalFundsReceived; 
+            uint oldInvestment = amountInvested[investor];
+            amountInvested[investor] -= investorShare;
+            emit FundAdjusted(investor, oldInvestment, amountInvested[investor]);
+        }
+
         (bool success, ) = owner.call{value: amount}("");
         require(success, "Failed to send Ether");
         emit FundsWithdrawn(owner, amount, payoutFractions[fractionIndex]);
 
         lastPayoutTime = block.timestamp;
-        fractionIndex++; // Move to the next fraction
+        fractionIndex++;
     }
 
     function getBalance() public view returns (uint) {
         return address(this).balance;
     }
-    function getInvestors() public view returns (uint) {
-        return address(this).balance;
+
+    function getInvestors() public view returns (address[] memory) {
+        return investors;
     }
 }
