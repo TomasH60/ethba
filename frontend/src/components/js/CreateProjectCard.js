@@ -21,7 +21,7 @@ const CreateProjectCard = ({ onClose }) => {
   const storeData = async (e) => {
     e.preventDefault();
     const totalPercentage = calculatePercentageData()
-    const projectData = { projectName, description, imgLink, fundingGoal, fractionNums, fractions, totalPercentage};
+    const projectData = { projectName, description, imgLink, fundingGoal, fractionNums, fractions, totalPercentage, webLink};
     
     try {
       const docRef = await addDoc(collection(db, "projects"), projectData);
@@ -174,6 +174,7 @@ const CreateProjectCard = ({ onClose }) => {
               <div>
                 <input
                   type="text"
+                  value={webLink}
                   onChange={(e) => setWebLink(e.target.value)}
                 />
               </div>
