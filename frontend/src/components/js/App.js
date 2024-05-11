@@ -29,7 +29,7 @@ const App = () => {
       <SwitchTransition mode="out-in">
         <CSSTransition
           key={activeView}
-          timeout={200}
+          timeout={300}
           classNames="Modal"
           unmountOnExit
         >
