@@ -25,7 +25,7 @@ const Card = (props) => {
       <div className="CardContainer-div">
         <img 
           className="project_img-img" 
-          src={props.preject_img || defaultImage} 
+          src={props.project_img} 
           alt="Project Visual" 
           onError={handleImageError}
         />

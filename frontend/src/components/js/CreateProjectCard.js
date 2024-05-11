@@ -213,7 +213,7 @@ const CreateProjectCard = ({ onClose }) => {
         </div>
         <div className="Code-div">
           <SyntaxHighlighter language="solidity" style={materialDark}>
-            {/* Solidity code here */}
+            {solidityCode}
           </SyntaxHighlighter>
         </div>
       </div>
