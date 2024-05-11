@@ -5,6 +5,7 @@ contract ProjectContract {
     address public owner;
     uint public fundingGoal;
     uint public totalFundsReceived;
+    address[] public investors;
     uint[] public payoutFractions;
     uint public lastPayoutTime;
     uint public payoutInterval; // Set the payout interval to one month
@@ -56,6 +57,9 @@ contract ProjectContract {
     }
 
     function getBalance() public view returns (uint) {
+        return address(this).balance;
+    }
+    function getInvestors() public view returns (uint) {
         return address(this).balance;
     }
 }

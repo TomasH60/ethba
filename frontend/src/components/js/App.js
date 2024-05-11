@@ -7,6 +7,7 @@ import ThreeScene from "./ThreeScene";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import "../scss/App.scss";
 
+
 const App = () => {
   const [activeView, setActiveView] = useState("home"); // Possible values: 'home', 'projects', 'addProject'
 

@@ -5,6 +5,7 @@
   "dependencies": {
     "bootstrap": "^4.4.1",
     "ethers": "^5.4.7",
+    "firebase": "^10.11.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-syntax-highlighter": "^15.5.0",
@@ -17,9 +18,8 @@
     "sass": "^1.77.0"
   },
   "scripts": {
-    "start": "concurrently --kill-others \"npm run server\" \"npm run react-start\"",
-    "react-start": "react-scripts start",
-    "server": "nodemon gun-server.js"
+    "start": "npm run react-start",
+    "react-start": "react-scripts start"
   },
   "eslintConfig": {
     "extends": "react-app"
