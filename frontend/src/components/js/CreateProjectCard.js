@@ -508,60 +508,50 @@ const CreateProjectCard = ({ onClose }) => {
   const processForm = async (e) => {
     e.preventDefault();
     await deployContract();
-    console.log(ownerAddress + "here");
-    console.log(contractAddress + "here");
-
-    console.log("Form submitted and saved");
-  };
+    await storeData();
+    console.log('Form submitted and saved');
+    
+  }
   const deployContract = async () => {
     if (!window.ethereum) {
-      alert("Please install MetaMask to interact.");
-      return;
+        alert('Please install MetaMask to interact.');
+        return;
     }
 
     try {
-      await window.ethereum.request({ method: "eth_requestAccounts" });
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        
+        // Get the owner address
+        const ownerAddress = await signer.getAddress();
+        
+        const ContractFactory = new ethers.ContractFactory(
+            CONTRACT_ABI,
+            CONTRACT_BYTECODE,
+            signer
+        );
 
-      // Get the owner address and await its resolution
-      const ownerAddress = await signer.getAddress(); // Properly await the address here
+        const contract = await ContractFactory.deploy(
+            ethers.utils.parseUnits(fundingGoal, "ether"),
+            fractions
+        );
 
-      const ContractFactory = new ethers.ContractFactory(
-        CONTRACT_ABI,
-        CONTRACT_BYTECODE,
-        signer
-      );
+        await contract.deployed();
 
-      const contract = await ContractFactory.deploy(
-        ethers.utils.parseUnits(fundingGoal, "ether"),
-        fractions
-      );
-
-      await contract.deployed();
-
-      // Update state with the contract address and owner address
-      setOwnerAddress(ownerAddress); // Use the awaited owner address
-      setContractAddress(contract.address); // Use contract.address
-      console.log("Contract deployed to:", contract.address); // Log using contract.address
-      console.log("Owner address:", ownerAddress); // Log the awaited address
+        console.log('Contract deployed to:', contract.address);
+        
+        // Update state with the contract address and owner address
+        setContractAddress(contract.address);
+        setOwnerAddress(ownerAddress);
     } catch (error) {
-      console.error("Error deploying contract:", error);
+        console.error("Error deploying contract:", error);
     }
-  };
+};
 
-  useEffect(() => {
-    async function fetchData() {
-        try {
-            await storeData();
-        } catch (error) {
-            console.error('Failed to store data:', error);
-        }
-    }
-    fetchData();
-}, [ownerAddress, contractAddress]);
 
-  const storeData = async () => {
+
+ const storeData = async () => {
     const totalPercentage = fractions.reduce((acc, curr) => acc + curr, 0);
     const projectData = {
       projectName,
@@ -573,16 +563,16 @@ const CreateProjectCard = ({ onClose }) => {
       fractions,
       totalPercentage,
       contractAddress,
-      ownerAddress,
+      ownerAddress
     };
-
+    
     try {
       const docRef = await addDoc(collection(db, "projects"), projectData);
       console.log("Document written with ID: ", docRef.id);
     } catch (error) {
       console.error("Error adding document: ", error);
     }
-  };
+};
 
   const handleFractionChange = (index, value) => {
     const newFractions = [...fractions];
@@ -616,20 +606,14 @@ const CreateProjectCard = ({ onClose }) => {
   const renderValidationMessage = () => {
     if (!isTotalValid) {
       return (
-        <p
-          style={{
-            color: "red",
-            fontSize: "14px",
-            marginBottom: "8px",
-            minWidth: "100%",
-          }}
-        >
+        <p style={{ color: "red", fontSize: '14px', marginBottom: '8px', minWidth: '100%'}}>
           Total percentage cannot exceed 100%.
         </p>
       );
     }
     return null;
   };
+
 
   return (
     <div className="CreateProjectCard-div">
