@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import Gun from "gun";
 import "../scss/CreateProjectCard.scss";
 import PlotFractions from "./PlotFractions";
-
-const gun = Gun(["http://localhost:8765/gun"]); // Add your Gun peers here
+import {db, auth} from "../../firebase.config.js";
+import { collection, addDoc } from "firebase/firestore";
 
 const CreateProjectCard = ({ onClose }) => {
   const [projectName, setProjectName] = useState("");
@@ -13,14 +12,23 @@ const CreateProjectCard = ({ onClose }) => {
   const [imgLink, setImgLink] = useState("");
   const [fundingGoal, setFundingGoal] = useState("");
   const [fractionNums, setFractionNums] = useState();
-  const [fractions, setFractions] = useState([]);
+  const [fractions, setFractions] = useState([0]);
+
+
 
   const storeData = async (e) => {
     e.preventDefault();
-    const projectData = { projectName, description, imgLink, fundingGoal };
-    const projectRef = gun.get('projects').set(projectData);
-    console.log("Data stored with Gun ref:", projectRef);
+    const totalPercentage = calculatePercentageData()
+    const projectData = { projectName, description, imgLink, fundingGoal, fractionNums, fractions, totalPercentage};
+    
+    try {
+      const docRef = await addDoc(collection(db, "projects"), projectData);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
   };
+
   const handleFractionChange = (index, value) => {
     const newFractions = [...fractions];
     newFractions[index] = Number(value);
@@ -36,12 +44,14 @@ const CreateProjectCard = ({ onClose }) => {
         </div>
     ));
   };
+
+  
   
   const calculatePercentageData = () => {
     const total = fractions.reduce((acc, val) => acc + val, 0);
     let cumulativeTotal = 0;
   
-    const data = [{ fractionNumber: 0, percentage: 0 }];  // Start with 0%
+    const data = [{ fractionNumber: 0, percentage: 0 }]; 
   
     fractions.forEach((fraction, index) => {
       cumulativeTotal += fraction;
@@ -56,8 +66,7 @@ const CreateProjectCard = ({ onClose }) => {
 
   
   const plotData = calculatePercentageData();  
-      
-
+    
   const renderFractionBoxes = () => {
     return (
       <>
@@ -156,12 +165,13 @@ const CreateProjectCard = ({ onClose }) => {
 
             {fractionNums > 0 && renderValidationMessage()}
             
-            <div className="PlotBox"> 
-              <PlotFractions data={plotData} className/>
-            </div>
-            <button type="submit" disabled={!isTotalValid}>Create Project</button>
-          </form>
+            <PlotFractions data={plotData}/>
 
+            <button type="submit" disabled={!isTotalValid}>Create Project</button>
+            
+            
+          </form>
+           
         </div>
         <div className="Code-div">
           <SyntaxHighlighter language="solidity" style={materialDark}>

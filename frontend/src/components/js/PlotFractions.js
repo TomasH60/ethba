@@ -4,17 +4,28 @@ import {
 } from 'recharts';
 
 const extendData = (data) => {
-  const lastDataPoint = data[data.length - 1];
-  // Adding an additional data point if data exists
-  if (lastDataPoint) {
-    const extendedDataPoint = { ...lastDataPoint, fractionNumber: 'Finish' };
-    return [...data, extendedDataPoint];
+  // First check to replace all NaN values if the data contains only NaN percentages
+  const allNaN = data.every(point => isNaN(point.percentage));
+  const cleanedData = data.map(point => ({
+    ...point,
+    percentage: allNaN ? 0 : (isNaN(point.percentage) ? 0 : point.percentage)
+  }));
+
+  if (cleanedData.length > 0) {
+    // Ensure the start point is always 0%
+    cleanedData[0].fractionNumber = 'Start';
+    cleanedData[0].percentage = 0;
+
+    // Adding a finish point with 100% or the last valid percentage
+    const lastPercentage = cleanedData[cleanedData.length - 1].percentage;
+    const finishPercentage = isNaN(lastPercentage) ? 0 : 100;
+    cleanedData.push({ fractionNumber: 'Finish', percentage: finishPercentage });
   }
-  return data;
+
+  return cleanedData;
 };
 
 const formatTickX = (tickItem) => {
-  // Check for the first and last label
   if (tickItem === 0) return 'Start';
   if (tickItem === 'Finish') return 'Finish';
   return tickItem;
@@ -25,14 +36,10 @@ const formatTickY = (value) => {
 };
 
 const PlotFractions = ({ data }) => {
-  const extendedData = extendData(data);  // Ensuring the last point is extended
-  // Replacing first data point's label to "Start" if there is any data
-  if (extendedData.length > 0) {
-    extendedData[0].fractionNumber = 'Start';
-  }
-
+  const extendedData = extendData(data);
+  
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" height={300}> {/* Set a minimum height */}
       <LineChart
         data={extendedData}
         margin={{
@@ -43,7 +50,7 @@ const PlotFractions = ({ data }) => {
         <XAxis dataKey="fractionNumber" tickFormatter={formatTickX} />
         <YAxis domain={[0, 100]} tickFormatter={formatTickY} />
         <Legend />
-        <Line type="stepAfter" dataKey="percentage" stroke="#8884d8" dot={false}  />
+        <Line type="stepAfter" dataKey="percentage" stroke="#8884d8" dot={false} />
       </LineChart>
     </ResponsiveContainer>
   );

@@ -8,6 +8,8 @@ const server = http.createServer((req, res) => {
 
 const gun = Gun({ web: server });
 
+
+
 const port = 8765;
 server.listen(port, () => {
     console.log(`Gun server running on http://localhost:${port}/gun`);
