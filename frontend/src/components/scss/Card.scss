@@ -75,6 +75,14 @@ p {
   max-width: 50%;
 
 }
+
+.InputWithUnit .Unit {
+  position: absolute;
+  right: 10px; /* Adjusts spacing to the right of the container */
+  color: white;
+}
+
+
 .project_img-img {
   flex-grow: 1;
   width: 100%;
