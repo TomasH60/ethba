@@ -39,10 +39,10 @@ const Header = ({ onAddProject, onShowHome, onShowProjects }) => {
   return (
     <div className="Header-div">
       <div className="HeaderContainer-div">
-        <h1>EtheralFund</h1>
+        <h1 className="Header-h1">EtheralFund</h1>
         <div className="HeaderButtonContainer-div">
           <Button text="Home" onclick={onShowHome} />
-          <Button text="Projects" onclick={onShowProjects} />
+          <Button text="Projects" onclick={onShowProjects} type="button"/>
           <Button text="Add project" onclick={onAddProject} />
           {isConnected ? (
             <Button text={`Wallet connected: ${connectedAddress.slice(0, 5)}...`} />
