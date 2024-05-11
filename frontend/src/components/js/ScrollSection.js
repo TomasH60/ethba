@@ -16,9 +16,12 @@ const ScrollSection = (props) => {
       querySnapshot.forEach((doc) => {
         projects.push({ ...doc.data(), id: doc.id });
       });
+
       setItems(projects);
+      
       setIsLoading(false);
-      console.log("Items loaded:", projects);
+
+
     }, (error) => {
       console.error("Error loading projects:", error);
       setIsLoading(false);
@@ -39,7 +42,7 @@ const ScrollSection = (props) => {
             project_stats='asd'
             project_img={item.imgLink}
             project_number_of_fractinos={item.fractionNums}
-            project_fractions={item.totalPercentage}
+            project_fractions={item.fractions}
             project_website={item.webLink}
             project_fundingNeeded={item.fundingGoal}
             project_owner_address={item.ownerAddress}

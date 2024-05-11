@@ -110,4 +110,10 @@ contract ProjectContract {
     function getInvestors() public view returns (address[] memory) {
         return investors;
     }
+    function getNoVotes() public view returns (uint) {
+        return voteNo;
+    }
+    function getYesVotes() public view returns (uint) {
+        return voteYes;
+    }
 }

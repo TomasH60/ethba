@@ -4,6 +4,7 @@ import Button from "./Button";
 import PlotFractions from "./PlotFractions";
 import { div } from "three/examples/jsm/nodes/Nodes.js";
 import { ethers } from 'ethers';
+import { inverseLerp } from "three/src/math/MathUtils.js";
 const CONTRACT_ABI = [
   {
     "inputs": [
@@ -358,6 +359,9 @@ const Card = (props) => {
   const [isOwner, setIsOwner] = useState(false);
   const [connectedAddress, setConnectedAddress] = useState("");
   const [fundAmount, setFundAmount] = useState();
+  const [balance, setBalance] = useState(0);
+  const [investors, setInvestors] = useState([]);
+
   console.log(props);
   useEffect(() => {
     const getConnectedAddress = async () => {
@@ -366,10 +370,29 @@ const Card = (props) => {
         setConnectedAddress(accounts[0]);
       }
     };
-
+    getBalance();
     getConnectedAddress();
   }, []);
 
+  useEffect(() => {
+    const fetchAndCheckInvestor = async () => {
+      await getAddress();  // Assuming this function sets `connectedAddress`
+      console.log("Connected Address:", connectedAddress);
+      console.log("Investors List:", investors);
+  
+      if (connectedAddress) {
+        const addressLower = connectedAddress.toLowerCase();
+        const isInvestorCheck = investors.some(investor => 
+          investor.toLowerCase() === addressLower
+        );
+        setIsInvestor(isInvestorCheck);
+        console.log("Is Investor:", isInvestorCheck); // Log after state is potentially set
+      }
+    };
+  
+    fetchAndCheckInvestor();
+  }, [connectedAddress, investors]); // Add dependencies to re-run the effect when these values change
+  
   useEffect(() => {
     setIsOwner(props.owner_address === connectedAddress);
   }, [props.owner_address, connectedAddress]);
@@ -392,7 +415,23 @@ const Card = (props) => {
         alert("Failed to cast vote");
       }
   };
+  const getBalance = async () => {
+    if (!window.ethereum) {
+        alert("Ethereum wallet is not connected");
+        return;
+    }
+    try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(props.project_contract_address, CONTRACT_ABI, signer);
 
+        setBalance(await contract.getBalance());
+    } catch (error) {
+        console.error("Error on getting balance:", error);
+        alert("Failed to get balance");
+      }
+  };
+  
   const fund = async (amountEther) => {
     if (!window.ethereum) {
       alert("Ethereum wallet is not connected");
@@ -431,6 +470,43 @@ const Card = (props) => {
     }
   };
 
+  const voteForNo = async () => {
+    if (!window.ethereum) {
+        alert("Ethereum wallet is not connected");
+        return;
+    }
+    try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(props.project_contract_address, CONTRACT_ABI, signer);
+
+        const transaction = await contract.voteForNo();
+        await transaction.wait();
+        alert('Vote recorded!');
+    } catch (error) {
+        console.error("Error on voting:", error);
+        alert("Failed to cast vote");
+      }
+  };
+  
+
+  const getAddress = async () => {
+    if (!window.ethereum) {
+        alert("Ethereum wallet is not connected");
+        return;
+    }
+    try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(props.project_contract_address, CONTRACT_ABI, signer);
+
+        setInvestors(await contract.getInvestors());
+    } catch (error) {
+        console.error("Error on getting balance:", error);
+        alert("Failed to get balance");
+      }
+  };
+
   
 
 
@@ -449,12 +525,15 @@ const Card = (props) => {
     e.target.src = defaultImage;
   };
 
+  
+
+
   const fundingRaised = props.project_fundingRaised || 0;
   const fundingNeeded = props.project_fundingNeeded;
-  const progress = (fundingRaised / fundingNeeded) * 100;
+  const progress = (balance / fundingNeeded) * 100 / 1e18;
+  console.log(props);
 
   const displayWebsite = props.project_website ? props.project_website.replace('https://', '').split('/')[0] : '';
-
   return (
     <div className="Card-div">
       <div className="CardContainer-div" style={{ marginRight: '20px' }}>
@@ -503,7 +582,7 @@ const Card = (props) => {
             {voted ? <p>Current votage: scam: {} legit {} </p> : <div>
             {voteTime ? 
             <div className="scamlegitdiv">
-              <Button className="scamlegitbuttons" text="Is a Scam" onclick={() => setVoted(true)}/>
+              <Button className="scamlegitbuttons" text="Is a Scam" onclick={() => {setVoted(true); voteForNo()}}/>
               Voting on fraction {} of the project.
               <Button className="scamlegitbuttons" text="Legit" onclick={() => {setVoted(true); voteForYes()}}/>
             </div>
