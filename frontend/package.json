@@ -18,9 +18,8 @@
     "sass": "^1.77.0"
   },
   "scripts": {
-    "start": "concurrently --kill-others \"npm run server\" \"npm run react-start\"",
-    "react-start": "react-scripts start",
-    "server": "nodemon gun-server.js"
+    "start": "npm run react-start",
+    "react-start": "react-scripts start"
   },
   "eslintConfig": {
     "extends": "react-app"

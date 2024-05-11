@@ -39,7 +39,7 @@ const PlotFractions = ({ data }) => {
   const extendedData = extendData(data);
   
   return (
-    <ResponsiveContainer width="100%" height={300}> {/* Set a minimum height */}
+    <ResponsiveContainer width="100%" height={300}>
       <LineChart
         data={extendedData}
         margin={{

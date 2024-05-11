@@ -5,8 +5,8 @@ import "../scss/HomeCard.scss";
 const HomeCard = ({onShowProjects}) => {
   return (
     <div className="HomeCard-div">
-      <h1>🚀Boost your confidence in investing!🚀</h1>
-      <p>
+      <h1 className="HeaderHome-h1">🚀Boost your confidence in investing!🚀</h1>
+      <p className="HomePar-p">
         EtheralFund is a decentralized crowdfunding platform that allows you to
         fund projects with Ether.
         <br /><br />
