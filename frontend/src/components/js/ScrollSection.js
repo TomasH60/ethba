@@ -40,7 +40,10 @@ const ScrollSection = (props) => {
             project_img={item.imgLink}
             project_number_of_fractinos={item.fractionNums}
             project_fractions={item.totalPercentage}
-            project_website={item.website}
+            project_website={item.webLink}
+            project_fundingNeeded={item.fundingGoal}
+            project_owner_address={item.ownerAddress}
+            project_contract_address={item.contractAddress}
             
           />
         ))}
