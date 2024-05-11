@@ -39,7 +39,7 @@ const ScrollSection = (props) => {
             project_stats='asd'
             project_img={item.imgLink}
             project_number_of_fractinos={item.fractionNums}
-            project_fractions={item.totalPercentage}
+            project_fractions={item.fractions}
             project_website={item.webLink}
             project_fundingNeeded={item.fundingGoal}
             project_owner_address={item.ownerAddress}

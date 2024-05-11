@@ -40,9 +40,6 @@ const PlotFractions = ({ data }) => {
   
   return (
     <ResponsiveContainer width="100%" height={200}>
-      <div style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', }}>
-        Funding Distribution
-      </div>
       <LineChart
         data={extendedData}
         margin={{
