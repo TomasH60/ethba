@@ -13,6 +13,7 @@ contract ProjectContract {
     uint public voteNo; 
     bool public isApproved;
     uint public remainingFunds;
+
     mapping(address => uint) public amountInvested;
 
     event FundReceived(address sender, uint amount);
@@ -48,7 +49,7 @@ contract ProjectContract {
         require(amountInvested[msg.sender] > fundingGoal / 100000, "Insufficient stake to vote.");
         uint votingPower = calculateVotingPower(msg.sender);
         voteYes += votingPower;
-        if (voteYes * 1e18 > remainingFunds * 1e18 / 100 * 51) {
+        if (voteYes > totalFundsReceived / 2) {
             isApproved = true;
         }
     }
@@ -57,17 +58,14 @@ contract ProjectContract {
         require(amountInvested[msg.sender] > fundingGoal / 100000, "Insufficient stake to vote.");
         uint votingPower = calculateVotingPower(msg.sender);
         voteNo += votingPower;
-        if (voteNo * 1e18 > remainingFunds * 1e18 / 100 * 51) {
+        if (voteNo > totalFundsReceived / 2) {
             returnFundsToInvestors();
         }
     }
 
     function calculateVotingPower(address voter) internal view returns (uint) {
         uint votingPower = amountInvested[voter];
-        uint maxVotingPower = fundingGoal / 10;
-        if (votingPower > maxVotingPower) {
-            votingPower = maxVotingPower;
-        }
+        
         return votingPower;
     }
 
@@ -101,6 +99,7 @@ contract ProjectContract {
 
         lastPayoutTime = block.timestamp;
         fractionIndex++;
+        totalFundsReceived -= amount;
     }
 
     function getBalance() public view returns (uint) {

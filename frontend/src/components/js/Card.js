@@ -3,351 +3,351 @@ import "../scss/Card.scss";
 import Button from "./Button";
 import PlotFractions from "./PlotFractions";
 import { div } from "three/examples/jsm/nodes/Nodes.js";
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 import { inverseLerp } from "three/src/math/MathUtils.js";
 const CONTRACT_ABI = [
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: "uint256",
-        name: "_fundingGoal",
-        type: "uint256",
+        "internalType": "uint256",
+        "name": "_fundingGoal",
+        "type": "uint256"
       },
       {
-        internalType: "uint256[]",
-        name: "_payoutFractions",
-        type: "uint256[]",
-      },
+        "internalType": "uint256[]",
+        "name": "_payoutFractions",
+        "type": "uint256[]"
+      }
     ],
-    stateMutability: "nonpayable",
-    type: "constructor",
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
-    anonymous: false,
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        indexed: false,
-        internalType: "address",
-        name: "investor",
-        type: "address",
+        "indexed": false,
+        "internalType": "address",
+        "name": "investor",
+        "type": "address"
       },
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "oldInvestment",
-        type: "uint256",
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "oldInvestment",
+        "type": "uint256"
       },
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "newInvestment",
-        type: "uint256",
-      },
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newInvestment",
+        "type": "uint256"
+      }
     ],
-    name: "FundAdjusted",
-    type: "event",
+    "name": "FundAdjusted",
+    "type": "event"
   },
   {
-    anonymous: false,
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        indexed: false,
-        internalType: "address",
-        name: "sender",
-        type: "address",
+        "indexed": false,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
       },
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
     ],
-    name: "FundReceived",
-    type: "event",
+    "name": "FundReceived",
+    "type": "event"
   },
   {
-    anonymous: false,
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        indexed: false,
-        internalType: "address",
-        name: "recipient",
-        type: "address",
+        "indexed": false,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
       },
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
     ],
-    name: "FundReturned",
-    type: "event",
+    "name": "FundReturned",
+    "type": "event"
   },
   {
-    anonymous: false,
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        indexed: false,
-        internalType: "address",
-        name: "recipient",
-        type: "address",
+        "indexed": false,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
       },
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
       },
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "fraction",
-        type: "uint256",
-      },
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fraction",
+        "type": "uint256"
+      }
     ],
-    name: "FundsWithdrawn",
-    type: "event",
+    "name": "FundsWithdrawn",
+    "type": "event"
   },
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
-    name: "amountInvested",
-    outputs: [
+    "name": "amountInvested",
+    "outputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "fractionIndex",
-    outputs: [
+    "inputs": [],
+    "name": "fractionIndex",
+    "outputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "fundingGoal",
-    outputs: [
+    "inputs": [],
+    "name": "fundingGoal",
+    "outputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "getBalance",
-    outputs: [
+    "inputs": [],
+    "name": "getBalance",
+    "outputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "getInvestors",
-    outputs: [
+    "inputs": [],
+    "name": "getInvestors",
+    "outputs": [
       {
-        internalType: "address[]",
-        name: "",
-        type: "address[]",
-      },
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    name: "investors",
-    outputs: [
+    "name": "investors",
+    "outputs": [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "isApproved",
-    outputs: [
+    "inputs": [],
+    "name": "isApproved",
+    "outputs": [
       {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "isGoalMet",
-    outputs: [
+    "inputs": [],
+    "name": "isGoalMet",
+    "outputs": [
       {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "lastPayoutTime",
-    outputs: [
+    "inputs": [],
+    "name": "lastPayoutTime",
+    "outputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "owner",
-    outputs: [
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    name: "payoutFractions",
-    outputs: [
+    "name": "payoutFractions",
+    "outputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "remainingFunds",
-    outputs: [
+    "inputs": [],
+    "name": "remainingFunds",
+    "outputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "totalFundsReceived",
-    outputs: [
+    "inputs": [],
+    "name": "totalFundsReceived",
+    "outputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "voteForNo",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    "inputs": [],
+    "name": "voteForNo",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "voteForYes",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    "inputs": [],
+    "name": "voteForYes",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "voteNo",
-    outputs: [
+    "inputs": [],
+    "name": "voteNo",
+    "outputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "voteYes",
-    outputs: [
+    "inputs": [],
+    "name": "voteYes",
+    "outputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "withdrawFunds",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    "inputs": [],
+    "name": "withdrawFunds",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    stateMutability: "payable",
-    type: "receive",
-  },
+    "stateMutability": "payable",
+    "type": "receive"
+  }
 ];
 const defaultImage = "path/to/your/default/image.png"; // Define a default image
 
@@ -361,123 +361,131 @@ const Card = (props) => {
   const [fundAmount, setFundAmount] = useState();
   const [balance, setBalance] = useState(0);
   const [investors, setInvestors] = useState([]);
+  const [yesVotes, setYesVotes] = useState(0);
+  const [noVotes, setNoVotes] = useState(0);
 
-  console.log(props);
   useEffect(() => {
     const getConnectedAddress = async () => {
       if (window.ethereum) {
-        const accounts = await window.ethereum.request({
-          method: "eth_accounts",
-        });
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
         setConnectedAddress(accounts[0]);
       }
     };
     getBalance();
     getConnectedAddress();
+    getNoVote()
+    getYesVote()
   }, []);
 
   useEffect(() => {
     const fetchAndCheckInvestor = async () => {
-      await getAddress(); // Assuming this function sets `connectedAddress`
-      console.log("Connected Address:", connectedAddress);
-      console.log("Investors List:", investors);
-
+      await getAddress();  // Assuming this function sets `connectedAddress`
+  
       if (connectedAddress) {
         const addressLower = connectedAddress.toLowerCase();
-        const isInvestorCheck = investors.some(
-          (investor) => investor.toLowerCase() === addressLower
+        const isInvestorCheck = investors.some(investor => 
+          investor.toLowerCase() === addressLower
         );
         setIsInvestor(isInvestorCheck);
-        console.log("Is Investor:", isInvestorCheck); // Log after state is potentially set
       }
     };
-
+  
     fetchAndCheckInvestor();
   }, [connectedAddress, investors]); // Add dependencies to re-run the effect when these values change
-
-  useEffect(() => {
-    setIsOwner(props.owner_address === connectedAddress);
-  }, [props.owner_address, connectedAddress]);
+  
+  useEffect(() => { console.log(connectedAddress, props.project_owner_address);
+    if (connectedAddress && props.project_owner_address) {
+     
+      // Convert both addresses to lowercase to ensure a case-insensitive comparison
+      const isOwner = props.project_owner_address.toLowerCase() === connectedAddress;
+      setIsOwner(isOwner);
+    }
+  }, [ props.project_owner_address]);
 
   const voteForYes = async () => {
     if (!window.ethereum) {
-      alert("Ethereum wallet is not connected");
-      return;
+        alert("Ethereum wallet is not connected");
+        return;
     }
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        props.project_contract_address,
-        CONTRACT_ABI,
-        signer
-      );
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(props.project_contract_address, CONTRACT_ABI, signer);
 
-      const transaction = await contract.voteForYes();
-      await transaction.wait();
-      alert("Vote recorded!");
+        const transaction = await contract.voteForYes();
+        await transaction.wait();
+        alert('Vote recorded!');
     } catch (error) {
-      console.error("Error on voting:", error);
-      alert("Failed to cast vote");
-    }
+        console.error("Error on voting:", error);
+        alert("Failed to cast vote");
+      }
   };
+
+  const requestWithdraw = async () => {
+    if (!window.ethereum) {
+        alert("Ethereum wallet is not connected");
+        return;
+    }
+    try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(props.project_contract_address, CONTRACT_ABI, signer);
+
+        const transaction = await contract.requestWithdraw();
+        await transaction.wait();
+        alert('Vote recorded!');
+    } catch (error) {
+        console.error("Error on voting:", error);
+        alert("Failed to cast vote");
+      }
+  };
+
   const getBalance = async () => {
     if (!window.ethereum) {
-      alert("Ethereum wallet is not connected");
-      return;
+        alert("Ethereum wallet is not connected");
+        return;
     }
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        props.project_contract_address,
-        CONTRACT_ABI,
-        signer
-      );
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(props.project_contract_address, CONTRACT_ABI, signer);
 
-      setBalance(await contract.getBalance());
+        setBalance(await contract.getBalance());
     } catch (error) {
-      console.error("Error on getting balance:", error);
-      alert("Failed to get balance");
-    }
+        console.error("Error on getting balance:", error);
+      }
   };
-
+  
   const fund = async (amountEther) => {
     if (!window.ethereum) {
       alert("Ethereum wallet is not connected");
       return;
     }
-
+  
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-
+  
       // Get the address of the signer (connected wallet)
       const address = await signer.getAddress();
-
+  
       // Fetch and log the balance of the connected wallet
       const balance = await provider.getBalance(address);
-      console.log(
-        `Wallet balance before transaction: ${ethers.utils.formatEther(
-          balance
-        )} ETH`
-      );
-
+  
       // Convert the amount from Ether to Wei
       const amountWei = ethers.utils.parseEther(amountEther.toString());
-      console.log("Amount in Wei:", amountWei);
-
+  
       // Prepare transaction parameters
       const transactionParameters = {
         to: props.project_contract_address, // Required except during contract creation
         from: address, // must match user's active address.
         value: amountWei._hex, // hex encoded wei value
       };
-
+  
       // Sending Ether to the contract (invokes the receive() function)
       const txResponse = await signer.sendTransaction(transactionParameters);
       await txResponse.wait();
-      alert("Funds successfully sent!");
+      alert('Funds successfully sent!');
     } catch (error) {
       console.error("Error during funding:", error);
       alert("Funding failed");
@@ -486,47 +494,76 @@ const Card = (props) => {
 
   const voteForNo = async () => {
     if (!window.ethereum) {
-      alert("Ethereum wallet is not connected");
-      return;
+        alert("Ethereum wallet is not connected");
+        return;
     }
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        props.project_contract_address,
-        CONTRACT_ABI,
-        signer
-      );
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(props.project_contract_address, CONTRACT_ABI, signer);
 
-      const transaction = await contract.voteForNo();
-      await transaction.wait();
-      alert("Vote recorded!");
+        const transaction = await contract.voteForNo();
+        await transaction.wait();
+        alert('Vote recorded!');
     } catch (error) {
-      console.error("Error on voting:", error);
-      alert("Failed to cast vote");
-    }
+        console.error("Error on voting:", error);
+        alert("Failed to cast vote");
+      }
   };
+  
 
   const getAddress = async () => {
     if (!window.ethereum) {
-      alert("Ethereum wallet is not connected");
-      return;
+        alert("Ethereum wallet is not connected");
+        return;
     }
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        props.project_contract_address,
-        CONTRACT_ABI,
-        signer
-      );
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(props.project_contract_address, CONTRACT_ABI, signer);
 
-      setInvestors(await contract.getInvestors());
+        setInvestors(await contract.getInvestors());
     } catch (error) {
-      console.error("Error on getting balance:", error);
-      alert("Failed to get balance");
-    }
+        console.error("Error on getting balance:", error);
+        
+      }
   };
+
+  const getNoVote = async () => {
+    if (!window.ethereum) {
+        alert("Ethereum wallet is not connected");
+        return;
+    }
+    try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(props.project_contract_address, CONTRACT_ABI, signer);
+
+        setNoVotes(await contract.getNoVotes());
+    } catch (error) {
+        console.error("Error on getting balance:", error);
+      }
+  };
+
+  const getYesVote = async () => {
+    if (!window.ethereum) {
+        alert("Ethereum wallet is not connected");
+        return;
+    }
+    try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(props.project_contract_address, CONTRACT_ABI, signer);
+
+        setYesVotes(await contract.getYesVotes());
+    } catch (error) {
+        console.error("Error on getting balance:", error);
+      }
+  };
+
+
+  
+
 
   useEffect(() => {
     if (timer > 0) {
@@ -543,129 +580,78 @@ const Card = (props) => {
     e.target.src = defaultImage;
   };
 
+  
+
+
   const fundingRaised = props.project_fundingRaised || 0;
   const fundingNeeded = props.project_fundingNeeded;
-  const progress = ((balance / fundingNeeded) * 100) / 1e18;
-  console.log(props);
+  const progress = (balance / fundingNeeded) * 100 / 1e18;
 
-  const displayWebsite = props.project_website
-    ? props.project_website.replace("https://", "").split("/")[0]
-    : "";
+    
+
+  const displayWebsite = props.project_website ? props.project_website.replace('https://', '').split('/')[0] : '';
   return (
     <div className="Card-div">
-      <div className="CardContainer-div" style={{ marginRight: "20px" }}>
+      <div className="CardContainer-div" style={{ marginRight: '20px' }}>
         <h1 className="project_name-h1">{props.project_name}</h1>
         <p className="project_desc-p">{props.project_desc}</p>
         <p className="project_stats-p">{props.project_stats}</p>
-        <p className="project_funding_goal" style={{ marginBottom: "10px" }}>
-          Funding goal: {props.project_fundingNeeded}
-        </p>
-        <p className="number_of_fractinos">
-          Number of fractions {props.project_number_of_fractinos}
-        </p>
-        <a className="project_website-a" href={props.project_website}>
-          {displayWebsite}
-        </a>
-        <PlotFractions data={props.project_fractions} className="PlotCss" />
-        <div
-          style={{
-            width: "100%",
-            backgroundColor: "#eee",
-            borderRadius: "5px",
-            margin: "10px 0",
-          }}
-        >
-          <div
-            style={{
-              width: `${progress}%`,
-              backgroundColor: progress >= 100 ? "green" : "#007bff",
-              height: "20px",
-              borderRadius: "5px",
-              transition: "width 0.4s ease-in-out",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              position: "relative",
-            }}
-          >
-            <span
-              style={{
-                position: "absolute",
-                width: "100%",
-                textAlign: "center",
-                color: "black",
-                fontSize: "12px",
-                fontWeight: "bold",
-              }}
-            >
+        <p className="project_funding_goal" style={{ marginBottom: '10px' }}>Funding goal: {props.project_fundingNeeded}</p>
+        <p className="number_of_fractinos">Number of fractions {props.project_number_of_fractinos}</p>
+        <a className="project_website-a" href={props.project_website}>{displayWebsite}</a>
+        <div style={{ width: '100%', backgroundColor: '#eee', borderRadius: '5px', margin: '10px 0'}}>
+          <div style={{
+            width: `${progress}%`,
+            backgroundColor: progress >= 100 ? 'green' : '#007bff',
+            height: '20px',
+            borderRadius: '5px',
+            transition: 'width 0.4s ease-in-out',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+          }}>
+            <span style={{
+              position: 'absolute', 
+              width: '100%',
+              textAlign: 'center',
+              color: 'black',
+              fontSize: '12px',
+              fontWeight: 'bold'
+            }}>
               {progress.toFixed(2)}%
             </span>
           </div>
         </div>
       </div>
       <div className="CardContainer-div">
-        <img
-          className="project_img-img"
-          src={props.project_img}
-          alt="Project Visual"
+        <img 
+          className="project_img-img" 
+          src={props.project_img} 
+          alt="Project Visual" 
           onError={handleImageError}
         />
-        {!isInvestor ? (
+        {isOwner ? <div className="scamlegitdiv"><Button text="Request withdraw" onclick={()=>{requestWithdraw()}}></Button></div> : <div>
+
+        {!isInvestor ? <div className="scamlegitdiv" > <input className="InputWithUnit" value={fundAmount}
+                onChange={(e) => setFundAmount(e.target.value)}></input ><p>ETH</p><Button text="Invest" onclick={() => {fund(fundAmount)}}/> </div>: 
           <div className="scamlegitdiv">
-            {" "}
-            <input
-              className="InputWithUnit"
-              value={fundAmount}
-              onChange={(e) => setFundAmount(e.target.value)}
-            ></input>
-            <p>ETH</p>
-            <Button
-              text="Invest"
-              onclick={() => {
-                fund(fundAmount);
-              }}
-            />{" "}
+            {voted ? <p>Current votage: scam: {noVotes} legit {yesVotes} </p> : <div>
+            {voteTime ? 
+            <div className="scamlegitdiv">
+              <Button className="scamlegitbuttons" text="Is a Scam" onclick={() => {setVoted(true); voteForNo()}}/>
+
+              <Button className="scamlegitbuttons" text="Legit" onclick={() => {setVoted(true); voteForYes()}}/>
+            </div>
+
+            :
+            <div className="scamlegitdivtimer">
+              <p>Voting in: {Math.floor(timer / 60)}:{("0" + (timer % 60)).slice(-2)}</p>
+            </div>
+              
+            }</div>}
           </div>
-        ) : (
-          <div className="scamlegitdiv">
-            {voted ? (
-              <p>
-                Current votage: scam: {} legit {}{" "}
-              </p>
-            ) : (
-              <div>
-                {voteTime ? (
-                  <div className="scamlegitdiv">
-                    <Button
-                      className="scamlegitbuttons"
-                      text="Is a Scam"
-                      onclick={() => {
-                        setVoted(true);
-                        voteForNo();
-                      }}
-                    />
-                    Voting on fraction {} of the project.
-                    <Button
-                      className="scamlegitbuttons"
-                      text="Legit"
-                      onclick={() => {
-                        setVoted(true);
-                        voteForYes();
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <div className="scamlegitdivtimer">
-                    <p>
-                      Voting in: {Math.floor(timer / 60)}:
-                      {("0" + (timer % 60)).slice(-2)}
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
+          }</div>}
       </div>
     </div>
   );
