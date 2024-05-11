@@ -13,6 +13,7 @@ contract ProjectContract {
     uint public voteNo; 
     bool public isApproved;
     uint public remainingFunds;
+
     mapping(address => uint) public amountInvested;
 
     event FundReceived(address sender, uint amount);

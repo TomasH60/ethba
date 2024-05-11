@@ -40,8 +40,7 @@ const formatTickY = (value) => {
 
 const PlotFractions = ({ data }) => {
   const extendedData = extendData(data);
-  console.log(extendedData);
-  console.log("ksfdjbjkagf jmashgf jbagsf nmhgb");
+  
   return (
     <ResponsiveContainer width="100%" height={200}>
       <div style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', }}>

@@ -361,8 +361,9 @@ const Card = (props) => {
   const [fundAmount, setFundAmount] = useState();
   const [balance, setBalance] = useState(0);
   const [investors, setInvestors] = useState([]);
+  const [yesVotes, setYesVotes] = useState(0);
+  const [noVotes, setNoVotes] = useState(0);
 
-  console.log(props);
   useEffect(() => {
     const getConnectedAddress = async () => {
       if (window.ethereum) {
@@ -372,13 +373,13 @@ const Card = (props) => {
     };
     getBalance();
     getConnectedAddress();
+    getNoVote()
+    getYesVote()
   }, []);
 
   useEffect(() => {
     const fetchAndCheckInvestor = async () => {
       await getAddress();  // Assuming this function sets `connectedAddress`
-      console.log("Connected Address:", connectedAddress);
-      console.log("Investors List:", investors);
   
       if (connectedAddress) {
         const addressLower = connectedAddress.toLowerCase();
@@ -386,7 +387,6 @@ const Card = (props) => {
           investor.toLowerCase() === addressLower
         );
         setIsInvestor(isInvestorCheck);
-        console.log("Is Investor:", isInvestorCheck); // Log after state is potentially set
       }
     };
   
@@ -415,6 +415,26 @@ const Card = (props) => {
         alert("Failed to cast vote");
       }
   };
+
+  const requestWithdraw = async () => {
+    if (!window.ethereum) {
+        alert("Ethereum wallet is not connected");
+        return;
+    }
+    try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(props.project_contract_address, CONTRACT_ABI, signer);
+
+        const transaction = await contract.requestWithdraw();
+        await transaction.wait();
+        alert('Vote recorded!');
+    } catch (error) {
+        console.error("Error on voting:", error);
+        alert("Failed to cast vote");
+      }
+  };
+
   const getBalance = async () => {
     if (!window.ethereum) {
         alert("Ethereum wallet is not connected");
@@ -447,11 +467,9 @@ const Card = (props) => {
   
       // Fetch and log the balance of the connected wallet
       const balance = await provider.getBalance(address);
-      console.log(`Wallet balance before transaction: ${ethers.utils.formatEther(balance)} ETH`);
   
       // Convert the amount from Ether to Wei
       const amountWei = ethers.utils.parseEther(amountEther.toString());
-      console.log("Amount in Wei:", amountWei);
   
       // Prepare transaction parameters
       const transactionParameters = {
@@ -507,6 +525,41 @@ const Card = (props) => {
       }
   };
 
+  const getNoVote = async () => {
+    if (!window.ethereum) {
+        alert("Ethereum wallet is not connected");
+        return;
+    }
+    try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(props.project_contract_address, CONTRACT_ABI, signer);
+
+        setNoVotes(await contract.getNoVotes());
+    } catch (error) {
+        console.error("Error on getting balance:", error);
+        alert("Failed to get balance");
+      }
+  };
+
+  const getYesVote = async () => {
+    if (!window.ethereum) {
+        alert("Ethereum wallet is not connected");
+        return;
+    }
+    try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(props.project_contract_address, CONTRACT_ABI, signer);
+
+        setYesVotes(await contract.getYesVotes());
+    } catch (error) {
+        console.error("Error on getting balance:", error);
+        alert("Failed to get balance");
+      }
+  };
+
+
   
 
 
@@ -531,7 +584,6 @@ const Card = (props) => {
   const fundingRaised = props.project_fundingRaised || 0;
   const fundingNeeded = props.project_fundingNeeded;
   const progress = (balance / fundingNeeded) * 100 / 1e18;
-  console.log(props);
 
   const displayWebsite = props.project_website ? props.project_website.replace('https://', '').split('/')[0] : '';
   return (
@@ -576,10 +628,12 @@ const Card = (props) => {
           alt="Project Visual" 
           onError={handleImageError}
         />
+        {isOwner ? <div className="scamlegitdiv"><Button text="Request withdraw" onclick={()=>{requestWithdraw()}}></Button></div> : <div>
+
         {!isInvestor ? <div className="scamlegitdiv" > <input className="InputWithUnit" value={fundAmount}
                 onChange={(e) => setFundAmount(e.target.value)}></input ><p>ETH</p><Button text="Invest" onclick={() => {fund(fundAmount)}}/> </div>: 
           <div className="scamlegitdiv">
-            {voted ? <p>Current votage: scam: {} legit {} </p> : <div>
+            {voted ? <p>Current votage: scam: {noVotes} legit {yesVotes} </p> : <div>
             {voteTime ? 
             <div className="scamlegitdiv">
               <Button className="scamlegitbuttons" text="Is a Scam" onclick={() => {setVoted(true); voteForNo()}}/>
@@ -594,7 +648,7 @@ const Card = (props) => {
               
             }</div>}
           </div>
-        }
+          }</div>}
       </div>
     </div>
   );
