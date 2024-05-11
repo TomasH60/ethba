@@ -16,9 +16,12 @@ const ScrollSection = (props) => {
       querySnapshot.forEach((doc) => {
         projects.push({ ...doc.data(), id: doc.id });
       });
+
       setItems(projects);
+      
       setIsLoading(false);
-      console.log("Items loaded:", projects);
+
+
     }, (error) => {
       console.error("Error loading projects:", error);
       setIsLoading(false);

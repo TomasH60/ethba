@@ -5,6 +5,9 @@ import {
 
 const extendData = (data) => {
   // First check to replace all NaN values if the data contains only NaN percentages
+
+  
+
   const allNaN = data.every(point => isNaN(point.percentage));
   const cleanedData = data.map(point => ({
     ...point,
@@ -37,7 +40,8 @@ const formatTickY = (value) => {
 
 const PlotFractions = ({ data }) => {
   const extendedData = extendData(data);
-  
+  console.log(extendedData);
+  console.log("ksfdjbjkagf jmashgf jbagsf nmhgb");
   return (
     <ResponsiveContainer width="100%" height={200}>
       <LineChart
